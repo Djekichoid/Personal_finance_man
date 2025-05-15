@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from . import Base
 
 class Category(Base):
-    __tablename__ = "category"
+    __tablename__ = "categories"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, nullable=False)
     type = Column(String, nullable=False)  # 'income' or 'expense'
@@ -12,3 +12,4 @@ class Category(Base):
 
     # relationship back to user
     user = relationship("User", back_populates="categories")
+    transactions = relationship("Transaction", back_populates="category")

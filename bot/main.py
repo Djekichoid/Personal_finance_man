@@ -8,6 +8,9 @@ engine = init_db(DATABASE_URL)
 # Import handler modules (they register via decorators)
 import handlers.start_handler
 import handlers.category_handler
+import handlers.transaction_handler
+import handlers.report_handler
+import handlers.fallback_handler
 
 if __name__ == "__main__":
     print("Starting bot...")
