@@ -9,7 +9,8 @@ Base = declarative_base()
 # Import all models so that SQLAlchemy knows about them when creating tables
 from .user import User
 from .category import Category
-# Future models: Category, Transaction, BudgetLimit, etc.
+from .transaction import Transaction
+# Future models: BudgetLimit, etc.
 
 
 def init_db(database_url: str):

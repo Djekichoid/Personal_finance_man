@@ -10,3 +10,4 @@ class User(Base):
     timezone = Column(String, nullable=True)
 
     categories = relationship("Category", back_populates="user")
+    transactions = relationship("Transaction", back_populates="user")

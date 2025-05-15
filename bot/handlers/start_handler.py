@@ -50,7 +50,8 @@ def start_handler(message: types.Message):
         types.KeyboardButton("➕ Витрата"),
         types.KeyboardButton("➕ Дохід"),
         types.KeyboardButton("📂 Категорії"),
-        types.KeyboardButton("⚙️ Ліміти")
+        types.KeyboardButton("📆 Звіт за період"),
+        types.KeyboardButton("⚙️ Налаштування")
     )
     bot.send_message(
         message.chat.id,
@@ -64,6 +65,7 @@ def get_main_menu():
         types.KeyboardButton("➕ Витрата"),
         types.KeyboardButton("➕ Дохід"),
         types.KeyboardButton("📂 Категорії"),
+        types.KeyboardButton("📆 Звіт за період"),
         types.KeyboardButton("⚙️ Налаштування")
     )
     return markup
