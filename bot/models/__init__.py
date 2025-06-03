@@ -1,3 +1,4 @@
+#models\__init__.py
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
@@ -10,6 +11,7 @@ Base = declarative_base()
 from .user import User
 from .category import Category
 from .transaction import Transaction
+from .monthly_metric import MonthlyMetric
 # Future models: BudgetLimit, etc.
 
 

@@ -1,3 +1,4 @@
+#models\user.py
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 from . import Base
@@ -11,3 +12,4 @@ class User(Base):
 
     categories = relationship("Category", back_populates="user")
     transactions = relationship("Transaction", back_populates="user")
+    monthly_metrics = relationship("MonthlyMetric", back_populates="user")

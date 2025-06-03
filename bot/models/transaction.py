@@ -1,3 +1,4 @@
+#models\transaction.py
 from sqlalchemy import Column, Integer, Float, DateTime, String, ForeignKey
 from sqlalchemy.orm import relationship
 from . import Base

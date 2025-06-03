@@ -1,3 +1,4 @@
+#handlers\category_handler.py
 from bot_app import bot
 from telebot import types
 from models import SessionLocal

@@ -1,3 +1,4 @@
+#handlers\start_handler.py
 from bot_app import bot
 from telebot import types
 from models import SessionLocal
@@ -51,7 +52,7 @@ def start_handler(message: types.Message):
         types.KeyboardButton("➕ Дохід"),
         types.KeyboardButton("📂 Категорії"),
         types.KeyboardButton("📆 Звіт за період"),
-        types.KeyboardButton("⚙️ Налаштування")
+        types.KeyboardButton("📅 Щомісячний звіт")
     )
     bot.send_message(
         message.chat.id,
@@ -66,6 +67,6 @@ def get_main_menu():
         types.KeyboardButton("➕ Дохід"),
         types.KeyboardButton("📂 Категорії"),
         types.KeyboardButton("📆 Звіт за період"),
-        types.KeyboardButton("⚙️ Налаштування")
+        types.KeyboardButton("📅 Щомісячний звіт")
     )
     return markup
