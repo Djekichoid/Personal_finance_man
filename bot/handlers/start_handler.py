@@ -1,9 +1,9 @@
 #handlers\start_handler.py
-from bot_app import bot
+from bot.bot_app import bot
 from telebot import types
-from models import SessionLocal
-from models.user import User
-from models.category import Category
+from bot.models import SessionLocal
+from bot.models.user import User
+from bot.models.category import Category
 
 
 DEFAULT_CATEGORIES = [
@@ -29,7 +29,7 @@ def start_handler(message: types.Message):
         user = User(
             telegram_id=message.from_user.id,
             username=message.from_user.username or message.from_user.full_name,
-            timezone=message.from_user.language_code  # fallback for timezone
+            timezone=message.from_user.language_code
         )
         session.add(user)
         session.commit()

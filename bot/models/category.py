@@ -1,7 +1,8 @@
-#models\category.py
+# models\category.py
 from sqlalchemy import Column, Integer, String, Boolean, ForeignKey
 from sqlalchemy.orm import relationship
-from . import Base
+from bot.models import Base
+
 
 class Category(Base):
     __tablename__ = "categories"
@@ -11,6 +12,5 @@ class Category(Base):
     is_default = Column(Boolean, default=False)
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
 
-    # relationship back to user
     user = relationship("User", back_populates="categories")
     transactions = relationship("Transaction", back_populates="category")

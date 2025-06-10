@@ -1,12 +1,13 @@
-#handlers\transaction_handler.py
-from bot_app import bot
+# handlers\transaction_handler.py
+from bot.bot_app import bot
 from telebot import types
-from models import SessionLocal
-from models.transaction import Transaction
-from models.category import Category
-from models.user import User
-from handlers.start_handler import get_main_menu
+from bot.models import SessionLocal
+from bot.models.transaction import Transaction
+from bot.models.category import Category
+from bot.models.user import User
+from bot.handlers.start_handler import get_main_menu
 import datetime
+
 
 # Utility to fetch categories by type
 def fetch_categories(telegram_id, ctype):
@@ -19,12 +20,14 @@ def fetch_categories(telegram_id, ctype):
     session.close()
     return cats
 
+
 @bot.message_handler(func=lambda m: m.text == "➕ Витрата")
 def expense_start(message):
     markup = types.ReplyKeyboardMarkup(one_time_keyboard=True, resize_keyboard=True)
     markup.add(types.KeyboardButton("🔙 Назад"))
     msg = bot.send_message(message.chat.id, "Введіть суму витрати:", reply_markup=markup)
     bot.register_next_step_handler(msg, expense_amount)
+
 
 @bot.message_handler(func=lambda m: m.text == "➕ Дохід")
 def income_start(message):
@@ -61,7 +64,8 @@ def expense_category(message, amount):
         return
     session = SessionLocal()
     user = session.query(User).filter(User.telegram_id == message.from_user.id).first()
-    category = session.query(Category).filter(Category.user_id == user.id, Category.name == name, Category.type == 'expense').first()
+    category = session.query(Category).filter(Category.user_id == user.id, Category.name == name,
+                                              Category.type == 'expense').first()
     session.close()
     if not category:
         bot.send_message(message.chat.id, "Категорія не знайдена.", reply_markup=get_main_menu())
@@ -127,7 +131,8 @@ def income_category(message, amount):
         return
     session = SessionLocal()
     user = session.query(User).filter(User.telegram_id == message.from_user.id).first()
-    category = session.query(Category).filter(Category.user_id == user.id, Category.name == name, Category.type == 'income').first()
+    category = session.query(Category).filter(Category.user_id == user.id, Category.name == name,
+                                              Category.type == 'income').first()
     session.close()
     if not category:
         bot.send_message(message.chat.id, "Категорія не знайдена.", reply_markup=get_main_menu())

@@ -1,4 +1,4 @@
-#utils\config.py
+# utils\config.py
 import os
 from dotenv import load_dotenv
 
@@ -14,3 +14,4 @@ if not BOT_TOKEN:
     raise ValueError("BOT_TOKEN is not set in the environment (.env)")
 if not DATABASE_URL:
     raise ValueError("DATABASE_URL is not set in the environment (.env)")
+

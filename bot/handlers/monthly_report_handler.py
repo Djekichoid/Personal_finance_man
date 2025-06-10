@@ -1,5 +1,6 @@
 # handlers/monthly_report_handler.py
 import matplotlib
+
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from io import BytesIO
@@ -14,6 +15,7 @@ from models.category import Category
 from models.monthly_metric import MonthlyMetric
 from models.user import User
 from handlers.start_handler import get_main_menu
+
 
 # --------------------------------------------
 # 1. Хендлер-команда для виклику місячного звіту
@@ -50,16 +52,20 @@ def monthly_report(message):
     comparison_text = build_comparison_text(prev_metric, data, start_prev_month)
 
     # 4. Генеруємо графіки
-    pie_buf     = build_pie_charts(data["cat_expenses"], data["cat_incomes"], start_prev_month, end_prev_month)
-    line_buf    = build_daily_line_chart(data["daily_expenses"], start_prev_month, end_prev_month)
+    pie_buf = build_pie_charts(data["cat_expenses"], data["cat_incomes"], start_prev_month, end_prev_month)
+    line_buf = build_daily_line_chart(data["daily_expenses"], start_prev_month, end_prev_month)
     summary_buf = build_summary_bar_chart(data["total_income"], data["total_expense"], start_prev_month, end_prev_month)
-    currency_buf= build_currency_chart(start_prev_month, end_prev_month)
+    currency_buf = build_currency_chart(start_prev_month, end_prev_month)
 
     # 5. Відправляємо картинки
-    bot.send_photo(chat_id, pie_buf);     pie_buf.close()
-    bot.send_photo(chat_id, line_buf);    line_buf.close()
-    bot.send_photo(chat_id, summary_buf); summary_buf.close()
-    bot.send_photo(chat_id, currency_buf);currency_buf.close()
+    bot.send_photo(chat_id, pie_buf);
+    pie_buf.close()
+    bot.send_photo(chat_id, line_buf);
+    line_buf.close()
+    bot.send_photo(chat_id, summary_buf);
+    summary_buf.close()
+    bot.send_photo(chat_id, currency_buf);
+    currency_buf.close()
 
     # 6. Текстовий підсумок
     text_report = format_text_report(data, comparison_text, start_prev_month, end_prev_month)
@@ -104,10 +110,10 @@ def collect_monthly_data(telegram_id: int, start_dt: datetime.date, end_dt: date
     txs = session.query(Transaction).filter(
         Transaction.user_id == user.id,
         Transaction.date >= datetime.datetime.combine(start_dt, datetime.time.min),
-        Transaction.date <= datetime.datetime.combine(end_dt,   datetime.time.max)
+        Transaction.date <= datetime.datetime.combine(end_dt, datetime.time.max)
     ).all()
 
-    total_income  = sum(t.amount for t in txs if t.type == "income")
+    total_income = sum(t.amount for t in txs if t.type == "income")
     total_expense = sum(t.amount for t in txs if t.type == "expense")
 
     # -------- 3.2. Денні витрати --------
@@ -125,7 +131,7 @@ def collect_monthly_data(telegram_id: int, start_dt: datetime.date, end_dt: date
 
     # -------- 3.3. Витрати та доходи за категоріями --------
     cat_expenses = {}
-    cat_incomes  = {}
+    cat_incomes = {}
     for t in txs:
         cat = session.query(Category).get(t.category_id)
         if not cat:
@@ -193,22 +199,22 @@ def build_comparison_text(prev_metric: MonthlyMetric, data: dict, start_dt: date
     txt = ""
     # 4.1. Доходи
     diff_inc = data["total_income"] - prev_metric.total_income
-    pct_inc  = (diff_inc / prev_metric.total_income * 100) if prev_metric.total_income else 0.0
-    arrow_inc= "🔺" if diff_inc >= 0 else "🔻"
+    pct_inc = (diff_inc / prev_metric.total_income * 100) if prev_metric.total_income else 0.0
+    arrow_inc = "🔺" if diff_inc >= 0 else "🔻"
     txt += f"Доходи: {data['total_income']:.2f} ({arrow_inc} {abs(pct_inc):.1f}% )\n"
 
     # 4.2. Витрати
     diff_exp = data["total_expense"] - prev_metric.total_expense
-    pct_exp  = (diff_exp / prev_metric.total_expense * 100) if prev_metric.total_expense else 0.0
-    arrow_exp= "🔺" if diff_exp >= 0 else "🔻"
+    pct_exp = (diff_exp / prev_metric.total_expense * 100) if prev_metric.total_expense else 0.0
+    arrow_exp = "🔺" if diff_exp >= 0 else "🔻"
     txt += f"Витрати: {data['total_expense']:.2f} ({arrow_exp} {abs(pct_exp):.1f}% )\n"
 
     # 4.3. Середня добова витрата
     days_in_month = len(data["daily_expenses"])
-    avg_daily     = data["total_expense"] / days_in_month if days_in_month else 0.0
-    diff_avg      = avg_daily - prev_metric.avg_daily_expense
-    pct_avg       = (diff_avg / prev_metric.avg_daily_expense * 100) if prev_metric.avg_daily_expense else 0.0
-    arrow_avg     = "🔺" if diff_avg >= 0 else "🔻"
+    avg_daily = data["total_expense"] / days_in_month if days_in_month else 0.0
+    diff_avg = avg_daily - prev_metric.avg_daily_expense
+    pct_avg = (diff_avg / prev_metric.avg_daily_expense * 100) if prev_metric.avg_daily_expense else 0.0
+    arrow_avg = "🔺" if diff_avg >= 0 else "🔻"
     txt += f"Середня добова витрата: {avg_daily:.2f} ({arrow_avg} {abs(pct_avg):.1f}% )\n"
 
     # 4.4. Топ-категорія
@@ -228,9 +234,9 @@ def build_comparison_text(prev_metric: MonthlyMetric, data: dict, start_dt: date
 # --------------------------------------------
 def build_pie_charts(cat_expenses: dict, cat_incomes: dict, start_dt: datetime.date, end_dt: datetime.date):
     labels_exp = list(cat_expenses.keys()) or ["Немає витрат"]
-    sizes_exp  = list(cat_expenses.values()) or [1.0]
-    labels_inc = list(cat_incomes.keys())  or ["Немає доходів"]
-    sizes_inc  = list(cat_incomes.values()) or [1.0]
+    sizes_exp = list(cat_expenses.values()) or [1.0]
+    labels_inc = list(cat_incomes.keys()) or ["Немає доходів"]
+    sizes_inc = list(cat_incomes.values()) or [1.0]
 
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(8, 4))
     ax1.pie(sizes_exp, labels=labels_exp, autopct="%1.1f%%", startangle=90)
@@ -251,7 +257,7 @@ def build_pie_charts(cat_expenses: dict, cat_incomes: dict, start_dt: datetime.d
 # --------------------------------------------
 def build_daily_line_chart(daily_expenses: dict, start_dt: datetime.date, end_dt: datetime.date):
     dates = sorted(daily_expenses.keys())
-    vals  = [daily_expenses[d] for d in dates]
+    vals = [daily_expenses[d] for d in dates]
     max_val = max(vals) if vals else 0.0
     max_day = dates[vals.index(max_val)] if vals else None
 
@@ -333,7 +339,7 @@ def build_currency_chart(start_dt: datetime.date, end_dt: datetime.date):
         url = f"https://api.coingecko.com/api/v3/coins/{symbol_id}/market_chart"
         params = {
             "vs_currency": vs_currency,
-            "days":        (end - start).days + 1
+            "days": (end - start).days + 1
         }
         try:
             resp = requests.get(url, params=params, timeout=10)
@@ -350,7 +356,7 @@ def build_currency_chart(start_dt: datetime.date, end_dt: datetime.date):
     # Збираємо дані
     usd_series = fetch_timeseries_nbu("USD", start_dt, end_dt)
     eur_series = fetch_timeseries_nbu("EUR", start_dt, end_dt)
-    btc_series = fetch_timeseries_crypto("bitcoin",  "usd", start=start_dt, end=end_dt)
+    btc_series = fetch_timeseries_crypto("bitcoin", "usd", start=start_dt, end=end_dt)
     eth_series = fetch_timeseries_crypto("ethereum", "usd", start=start_dt, end=end_dt)
 
     # Малюємо дві панелі
@@ -405,12 +411,12 @@ def build_currency_chart(start_dt: datetime.date, end_dt: datetime.date):
 # 9. Форматуємо текстовий підсумок
 # --------------------------------------------
 def format_text_report(data: dict, comparison_text: str, start_dt: datetime.date, end_dt: datetime.date) -> str:
-    total_income  = data["total_income"]
+    total_income = data["total_income"]
     total_expense = data["total_expense"]
-    balance       = total_income - total_expense
-    days_count    = len(data["daily_expenses"])
-    avg_daily     = (total_expense / days_count) if days_count else 0.0
-    save_pct      = (balance / total_income * 100) if total_income else 0.0
+    balance = total_income - total_expense
+    days_count = len(data["daily_expenses"])
+    avg_daily = (total_expense / days_count) if days_count else 0.0
+    save_pct = (balance / total_income * 100) if total_income else 0.0
 
     txt = f"📅 Звіт за {start_dt.strftime('%B %Y')}\n\n"
     txt += f"• Загальні доходи: {total_income:.2f} грн\n"
@@ -485,13 +491,13 @@ def save_monthly_metric(telegram_id: int, year_month: str, data: dict):
         )
         session.add(metric)
     else:
-        metric.total_income       = data["total_income"]
-        metric.total_expense      = data["total_expense"]
-        metric.avg_daily_expense  = avg_daily
-        metric.top_category       = top_cat
-        metric.top_category_pct   = top_pct
-        metric.avg_usd            = data["avg_usd"]
-        metric.avg_eur            = data["avg_eur"]
+        metric.total_income = data["total_income"]
+        metric.total_expense = data["total_expense"]
+        metric.avg_daily_expense = avg_daily
+        metric.top_category = top_cat
+        metric.top_category_pct = top_pct
+        metric.avg_usd = data["avg_usd"]
+        metric.avg_eur = data["avg_eur"]
 
     session.commit()
     session.close()

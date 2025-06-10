@@ -17,6 +17,7 @@ import handlers.report_handler
 import handlers.monthly_report_handler
 import handlers.fallback_handler
 
+
 def send_daily_reminder():
     session = SessionLocal()
     users = session.query(User).all()
@@ -26,6 +27,7 @@ def send_daily_reminder():
             u.telegram_id,
             "Не забудьте внести сьогоднішні витрати!"
         )
+
 
 if __name__ == "__main__":
     scheduler = BackgroundScheduler()

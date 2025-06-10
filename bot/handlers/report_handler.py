@@ -50,7 +50,7 @@ def report_pie(message):
         start_dt = datetime.datetime.fromisoformat(start_str)
         end_dt = datetime.datetime.fromisoformat(end_str)
     except:
-        bot.send_message(message.chat.id, "Невірний формат. Повторіть:", reply_markup=get_main_menu())
+        bot.send_message(message.chat.id, "Невірний формат.", reply_markup=get_main_menu())
         return
 
     session = SessionLocal()

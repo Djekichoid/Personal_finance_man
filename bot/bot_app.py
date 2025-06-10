@@ -1,5 +1,5 @@
-#bot_app.py
+# bot_app.py
 import telebot
-from utils.config import BOT_TOKEN
+from bot.utils.config import BOT_TOKEN
 
 bot = telebot.TeleBot(BOT_TOKEN)

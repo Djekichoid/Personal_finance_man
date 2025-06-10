@@ -1,8 +1,8 @@
-#models\__init__.py
+# models\__init__.py
 from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
-from utils.config import DATABASE_URL
+from bot.utils.config import DATABASE_URL
 
 # Base class for all ORM models
 Base = declarative_base()
@@ -12,7 +12,6 @@ from .user import User
 from .category import Category
 from .transaction import Transaction
 from .monthly_metric import MonthlyMetric
-# Future models: BudgetLimit, etc.
 
 
 def init_db(database_url: str):
@@ -23,6 +22,7 @@ def init_db(database_url: str):
     # Create all tables defined by subclasses of Base
     Base.metadata.create_all(engine)
     return engine
+
 
 # SQLAlchemy session factory
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
